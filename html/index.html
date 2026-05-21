@@ -606,12 +606,8 @@
     };
 
     try {
-      await fetch(SHEET_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify(lead)
-      });
+      const params = new URLSearchParams(lead);
+      await fetch(`${SHEET_URL}?${params}`, { method: 'GET', mode: 'no-cors' });
     } catch (err) {
       console.error('Erro ao enviar lead:', err);
     }
