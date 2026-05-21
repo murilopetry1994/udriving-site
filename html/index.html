@@ -593,7 +593,7 @@
   // Form submit — envia para Google Sheets via Apps Script
   const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyx7kp0QOiqckQ-_o1WH5rDH9qK27QVRliFjIfs2E8X1FCWzY5MKRwTAi6xBTtMHZIh/exec';
 
-  document.getElementById('leadForm').addEventListener('submit', async function (e) {
+  document.getElementById('leadForm').addEventListener('submit', function (e) {
     e.preventDefault();
     const btn = this.querySelector('.btn-submit');
     btn.disabled = true;
@@ -605,12 +605,8 @@
       whatsapp: this.whatsapp.value.trim()
     };
 
-    try {
-      const params = new URLSearchParams(lead);
-      await fetch(`${SHEET_URL}?${params}`, { method: 'GET', mode: 'no-cors' });
-    } catch (err) {
-      console.error('Erro ao enviar lead:', err);
-    }
+    const params = new URLSearchParams(lead);
+    new Image().src = `${SHEET_URL}?${params}`;
 
     this.style.display = 'none';
     document.getElementById('successBox').style.display = 'block';
