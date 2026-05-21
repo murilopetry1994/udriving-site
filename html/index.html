@@ -590,19 +590,32 @@
     this.value = v;
   });
 
-  // Mock form submit — salva no localStorage
-  document.getElementById('leadForm').addEventListener('submit', function (e) {
+  // Form submit — envia para Google Sheets via Apps Script
+  const SHEET_URL = 'https://script.google.com/macros/s/AKfycbydEPLdxYj_fBh_z8qzWV7JfVrtKwdQ74iqqfDHVHx3biW8Y3yl5DRJ__v1JS2LEmLX/exec';
+
+  document.getElementById('leadForm').addEventListener('submit', async function (e) {
     e.preventDefault();
+    const btn = this.querySelector('.btn-submit');
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+
     const lead = {
       nome: this.nome.value.trim(),
       email: this.email.value.trim(),
-      whatsapp: this.whatsapp.value.trim(),
-      timestamp: new Date().toISOString()
+      whatsapp: this.whatsapp.value.trim()
     };
-    const leads = JSON.parse(localStorage.getItem('udriving_leads') || '[]');
-    leads.push(lead);
-    localStorage.setItem('udriving_leads', JSON.stringify(leads));
-    console.log('✅ Lead:', lead);
+
+    try {
+      await fetch(SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(lead)
+      });
+    } catch (err) {
+      console.error('Erro ao enviar lead:', err);
+    }
+
     this.style.display = 'none';
     document.getElementById('successBox').style.display = 'block';
   });
